@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.team254.lib.util.TimeDelayedBoolean;
 import com.team498.o2022.Constants;
 import com.team498.o2022.RobotState;
-import com.team498.o2022.drivers.Pigeon;
+import com.team498.o2022.drivers.AHRS;
 import com.team498.o2022.drivers.SwerveModule;
 import com.team498.o2022.logger.LogStorage;
 import com.team498.o2022.logger.LoggingSystem;
@@ -43,7 +43,7 @@ public class Swerve extends Subsystem {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
 
-    public Pigeon mPigeon = Pigeon.getInstance();
+    public AHRS mPigeon = AHRS.getInstance();
 
     // chassis velocity status
     ChassisSpeeds chassisVelocity = new ChassisSpeeds();

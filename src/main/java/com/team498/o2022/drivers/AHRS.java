@@ -1,32 +1,33 @@
 package com.team498.o2022.drivers;
 
-import com.ctre.phoenix.sensors.Pigeon2;
 import com.team254.lib.geometry.Rotation2d;
 import com.team498.o2022.Constants;
 import com.team498.o2022.Ports;
 
-public class Pigeon {
+import edu.wpi.first.wpilibj.I2C.Port;
 
-    private static Pigeon mInstance;
+public class AHRS {
 
-    public static Pigeon getInstance() {
+    private static AHRS mInstance;
+
+    public static AHRS getInstance() {
         if (mInstance == null) {
-            mInstance = new Pigeon(Ports.PIGEON);
+            mInstance = new AHRS(Ports.AHRS);
         }
         return mInstance;
     }
 
-    // Actual pigeon object
-    private final Pigeon2 mGyro;
+    // Actual AHRS object
+    private final com.kauailabs.navx.frc.AHRS mGyro;
 
     // Configs
     private boolean inverted = Constants.SwerveConstants.invertGyro;
     private Rotation2d yawAdjustmentAngle = Rotation2d.identity();
     private Rotation2d rollAdjustmentAngle = Rotation2d.identity();
 
-    private Pigeon(int port) {        
-        mGyro = new Pigeon2(port, "canivore1");
-        mGyro.configFactoryDefault();
+    private AHRS(Port port) {        
+        mGyro = new com.kauailabs.navx.frc.AHRS(port);
+        mGyro.calibrate();
     }
 
     public Rotation2d getYaw() {

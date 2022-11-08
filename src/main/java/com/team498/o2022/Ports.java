@@ -1,5 +1,7 @@
 package com.team498.o2022;
 
+import edu.wpi.first.wpilibj.I2C.Port;
+
 public class Ports {
 
     /*** SWERVE MODULE PORTS ***/
@@ -63,6 +65,7 @@ public class Ports {
 
     // Candle
     public static final int CANDLE = 22;
+    public static final Port AHRS = Port.kOnboard;
 
 
 }

@@ -2,7 +2,7 @@ package com.team498.o2022.subsystems;
 
 import com.team498.o2022.RobotState;
 import com.team498.o2022.controlboard.ControlBoard;
-import com.team498.o2022.drivers.Pigeon;
+import com.team498.o2022.drivers.AHRS;
 import com.team498.o2022.logger.LogStorage;
 import com.team498.o2022.logger.LoggingSystem;
 import com.team498.o2022.loops.ILooper;
@@ -31,7 +31,7 @@ public class Superstructure extends Subsystem {
     /*** REQUIRED INSTANCES ***/
     private final ControlBoard mControlBoard = ControlBoard.getInstance();
     private final Swerve mSwerve = Swerve.getInstance();
-    private final Pigeon mPigeon = Pigeon.getInstance();
+    private final AHRS mGyro = AHRS.getInstance();
 
     // robot state
     private final RobotState mRobotState = RobotState.getInstance();
@@ -193,7 +193,7 @@ public class Superstructure extends Subsystem {
         ArrayList<Number> items = new ArrayList<Number>();
         items.add(mPeriodicIO.timestamp);
         items.add(mPeriodicIO.dt);
-        items.add(mPigeon.getRoll().getDegrees());
+        items.add(mGyro.getRoll().getDegrees());
 
         // send data to logging storage
         mStorage.addData(items);
