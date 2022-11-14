@@ -1,9 +1,9 @@
 {
   "lengthUnit": "Meter",
   "exportUnit": "Always Meters",
-  "maxVelocity": 2.5,
+  "maxVelocity": 2.0,
   "maxAcceleration": 3.0,
-  "trackWidth": 20.75,
+  "trackWidth": 0.57,
   "gameName": "Rapid React",
-  "outputDir": ""
+  "outputDir": "../2022-RV2 - Offseason/src/main/deploy"
 }
