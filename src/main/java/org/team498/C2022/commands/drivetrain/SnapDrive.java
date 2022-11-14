@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import org.team498.C2022.RobotContainer;
 import org.team498.C2022.subsystems.Drivetrain;
 
 // Controls the robot in fiels oriented mode
@@ -18,23 +17,19 @@ public class SnapDrive extends CommandBase {
 	private final DoubleSupplier translationYSupplier;
 	private final DoubleSupplier rotationSupplier;
 	private final double deadzone;
-	private final BooleanSupplier slowDrive;
 	private final double driveSpeed;
-	private final RobotContainer container;
-	public SnapDrive( RobotContainer container,
-		Drivetrain drivetrainSubsystem,
+	public SnapDrive(
+			Drivetrain drivetrainSubsystem,
 			DoubleSupplier translationXSupplier,
 			DoubleSupplier translationYSupplier,
 			DoubleSupplier rotationSupplier,
 			double deadzone,
 			BooleanSupplier slowDrive) {
-				this.container = container;
 		this.drivetrainSubsystem = drivetrainSubsystem;
 		this.translationXSupplier = translationXSupplier;
 		this.translationYSupplier = translationYSupplier;
 		this.rotationSupplier = rotationSupplier;
 		this.deadzone = deadzone;
-		this.slowDrive = slowDrive;
 		this.driveSpeed = slowDrive.getAsBoolean() ? 1 : 2;
 
 		addRequirements(this.drivetrainSubsystem);
@@ -56,8 +51,8 @@ public class SnapDrive extends CommandBase {
 			deadzone(xTranslation, deadzone), 
 			deadzone(yTranslation, deadzone), 
 			rotation, 
-			true,
-			container);
+			true
+		);
 		// drivetrainSubsystem.drive(
 		// 		ChassisSpeeds.fromFieldRelativeSpeeds(
 		// 				deadzone(((xTranslation * driveSpeed) * (xTranslation * driveSpeed)) * xTranslation, deadzone),

@@ -8,7 +8,6 @@ import static org.team498.C2022.Constants.DrivetrainConstants.kMaxVelocityMeters
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -30,8 +29,8 @@ public class SwerveModule extends SubsystemBase {
 	private final CANCoder encoder;
 
 	private final double angleOffset;
-	private TalonFXConfiguration driveMotorConfig = new TalonFXConfiguration();
-	private TalonFXConfiguration steerMotorConfig = new TalonFXConfiguration();
+	//private TalonFXConfiguration driveMotorConfig = new TalonFXConfiguration();
+	//private TalonFXConfiguration steerMotorConfig = new TalonFXConfiguration();
 
 	private double lastAngle;
 

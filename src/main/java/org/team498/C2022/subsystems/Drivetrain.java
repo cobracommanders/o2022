@@ -19,10 +19,7 @@ import static org.team498.C2022.Constants.DrivetrainConstants.kFrontRightSteerMo
 import static org.team498.C2022.Constants.DrivetrainConstants.kMaxVelocityMetersPerSecond;
 import static org.team498.C2022.Constants.DrivetrainConstants.kSwerveModuleDistanceFromCenter;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import org.team498.C2022.Constants;
-import org.team498.C2022.RobotContainer;
 import org.team498.lib.drivers.SwerveModule;
 import org.team498.lib.util.TimeDelayedBoolean;
 
@@ -38,10 +35,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
-import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -74,6 +69,10 @@ public class Drivetrain extends SubsystemBase {
 
 	private static SwerveDriveKinematics kinematics;
 
+	public double lastAngle;
+	public double offset = 0;
+
+
 	// Distance of the swerve modules from the center of the robot converted to
 	// meters
 	private final double moduleDistance = Units.inchesToMeters(kSwerveModuleDistanceFromCenter);
@@ -93,7 +92,6 @@ public class Drivetrain extends SubsystemBase {
 	public final ADIS16448_IMU IMU = new ADIS16448_IMU();
 
 	private final Field2d field = new Field2d();
-	private double offset = 0;
 
 	public void setGyroOffset(double offset) {
 		IMU.reset();
@@ -219,14 +217,14 @@ public class Drivetrain extends SubsystemBase {
 	// 	drive(ChassisSpeeds.fromFieldRelativeSpeeds(translation2d.getX(), translation2d.getY(), angleAdjustment, Rotation2d.fromDegrees(getYaw180())));
     //     //drive(translation2d, angleAdjustment, fieldRelative, false);
     // }
-	public void angleAlignDrive(double x, double y, double targetHeading, boolean fieldRelative, RobotContainer container) {
+	public void angleAlignDrive(double x, double y, double targetHeading, boolean fieldRelative) {
         snapController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
         double angleAdjustment = snapController.calculate(Math.toRadians(getYaw180()));
 		if (snapController.atGoal()) {
 			angleAdjustment = 0;
 		}
 		SmartDashboard.putNumber("Angle adjustment", angleAdjustment);
-		drive(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, angleAdjustment, Rotation2d.fromDegrees(getYaw180() + container.offset)));
+		drive(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, angleAdjustment, Rotation2d.fromDegrees(getYaw180() + offset)));
 		//drive(translation2d, angleAdjustment, fieldRelative, false);
     }
 	public boolean atPosition() {
