@@ -280,7 +280,6 @@ public class Swerve extends Subsystem {
         mPeriodicIO.odometry_pose_y = swerveOdometry.getPoseMeters().getY();
         mPeriodicIO.odometry_pose_rot = swerveOdometry.getPoseMeters().getRotation().getDegrees();
         mPeriodicIO.pigeon_heading = mPigeon.getYaw().getDegrees();
-        mPeriodicIO.robot_pitch = mPigeon.getUnadjustedPitch().getDegrees();
         mPeriodicIO.robot_roll = mPigeon.getRoll().getDegrees();
         mPeriodicIO.snap_target = Math.toDegrees(snapPIDController.getGoal().position);
         mPeriodicIO.swerve_heading = MathUtil.inputModulus(mPigeon.getYaw().getDegrees(), 0, 360);

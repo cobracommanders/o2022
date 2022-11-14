@@ -36,12 +36,6 @@ public class Superstructure extends Subsystem {
     // robot state
     private final RobotState mRobotState = RobotState.getInstance();
 
-    // timer for reversing the intake and then stopping it once we have two correct
-    // cargo
-    Timer mIntakeRejectTimer = new Timer();
-    // timer for asserting ball position
-    Timer mAssertBallPositionTimer = new Timer();
-
     // PeriodicIO instance and paired csv writer
     public PeriodicIO mPeriodicIO = new PeriodicIO();
 
@@ -62,8 +56,6 @@ public class Superstructure extends Subsystem {
             @Override
             public void onLoop(double timestamp) {
                 final double start = Timer.getFPGATimestamp();
-
-                setGoals();
 
                 // send log data
                 SendLog();
@@ -121,42 +113,6 @@ public class Superstructure extends Subsystem {
      */
     public void updateOperatorCommands() {}
 
-    /***
-     * UPDATE SUBSYSTEM STATES + SETPOINTS AND SET GOALS
-     * 
-     * 1. updates wanted actions for intake and indexer subsystems based on
-     * requested superstructure action
-     * 2. updates shooter and hood setpoint goals from tracked vars
-     * 3. set subsystem states and shooting setpoints within subsystems
-     * 
-     */
-    public void setGoals() {}
-        /*** UPDATE VISION AIMING PARAMETERS FROM GOAL TRACKING ***/
-    // public void updateVisionAimingParameters() {
-    //     // get aiming parameters from either vision-assisted goal tracking or
-    //     // odometry-only tracking
-    //     real_aiming_params_ = getRealAimingParameters();
-
-    //     // predicted pose and target
-    //     Pose2d predicted_field_to_vehicle = mRobotState
-    //             .getPredictedFieldToVehicle(Constants.VisionConstants.kLookaheadTime);
-    //     Pose2d predicted_vehicle_to_goal = predicted_field_to_vehicle.inverse()
-    //             .transformBy(real_aiming_params_.get().getFieldToGoal());
-
-    //     // update align delta from target and distance from target
-    //     mTrackId = real_aiming_params_.get().getTrackId();
-    //     mTargetAngle = predicted_vehicle_to_goal.getTranslation().direction().getRadians() + Math.PI;
-
-    //     // send vision aligning target delta to swerve
-    //     mSwerve.acceptLatestGoalTrackVisionAlignGoal(mTargetAngle);
-
-    //     // update distance to target
-    //     if (mLimelight.hasTarget() && mLimelight.getLimelightDistanceToTarget().isPresent()) {
-    //         mCorrectedDistanceToTarget = mLimelight.getLimelightDistanceToTarget().get();
-    //     } else {
-    //         mCorrectedDistanceToTarget = predicted_vehicle_to_goal.getTranslation().norm();
-    //     }
-    // }
     @Override
     public boolean checkSystem() {
         return false;
@@ -184,7 +140,6 @@ public class Superstructure extends Subsystem {
         ArrayList<String> headers = new ArrayList<String>();
         headers.add("timestamp");
         headers.add("dt");
-        headers.add("gyro roll");
 
         mStorage.setHeaders(headers);
     }
@@ -193,7 +148,6 @@ public class Superstructure extends Subsystem {
         ArrayList<Number> items = new ArrayList<Number>();
         items.add(mPeriodicIO.timestamp);
         items.add(mPeriodicIO.dt);
-        items.add(mGyro.getRoll().getDegrees());
 
         // send data to logging storage
         mStorage.addData(items);
