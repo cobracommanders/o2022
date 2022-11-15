@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class DriverController extends ControllerPackage {
     private final XboxController controller;
     private final Drivetrain drivetrain;
-    public DriverSet set;
+    public DriverSet set = new DriverSet();
 
     class DriverSet {
         DoubleSupplier x;
@@ -32,7 +32,7 @@ public class DriverController extends ControllerPackage {
 
     @Override
     public void periodic() {
-        updateControllerSet();
+        super.periodic();
         updateDriverSet();
     }
     private void updateDriverSet() {
@@ -68,11 +68,11 @@ public class DriverController extends ControllerPackage {
     private double squareInput(double input) {
         return Math.copySign(Math.pow(input, 2), input);
     }
-	public static double getControllerAngle(XboxController controller, Drivetrain drivetrain) {
+	public double getControllerAngle(Drivetrain drivetrain) {
 
-		double inputY = (Math.abs(controller.getRightY()) > .1) ? controller.getRightY() : 0.0001;
-		double inputX = (Math.abs(controller.getRightX()) > .1) ? -controller.getRightX() : 0.0001;
-		if (Math.abs(controller.getRightY()) < .5 && Math.abs(controller.getRightX()) < .5) {
+		double inputY = (Math.abs(super.set.rightY) > .1) ? super.set.rightY : 0.0001;
+		double inputX = (Math.abs(super.set.rightX) > .1) ? -super.set.rightX : 0.0001;
+		if (Math.abs(super.set.rightY) < .5 && Math.abs(super.set.rightX) < .5) {
 			inputY = 0.0001;
 			inputX = 0.0001;
 		}
@@ -87,8 +87,8 @@ public class DriverController extends ControllerPackage {
 		drivetrain.lastAngle = angle;
 		return angle;
 	}
-	public double getPOVAngle(XboxController controller, Drivetrain drivetrain) {
-		double input = controller.getPOV();
+	public double getPOVAngle(Drivetrain drivetrain) {
+		double input = super.set.pov;
 		double result;
 		if (input != -1) {
 			if (input > 180) {
@@ -103,14 +103,14 @@ public class DriverController extends ControllerPackage {
 		drivetrain.lastAngle = result;
 		return result - 90;
 	}
-    public boolean isPOVActive(XboxController controller) {
-        return controller.getPOV() != -1;
+    public boolean isPOVActive() {
+        return super.set.pov != -1;
     }
     public double getRotationSetpoint(XboxController controller, Drivetrain drivetrain) {
-        if (isPOVActive(controller)) {
-            return getPOVAngle(controller, drivetrain);
+        if (isPOVActive()) {
+            return getPOVAngle(drivetrain);
         } else {
-            return getControllerAngle(controller, drivetrain);
+            return getControllerAngle(drivetrain);
         }
     }
 }

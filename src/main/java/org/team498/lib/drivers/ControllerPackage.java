@@ -14,6 +14,7 @@ public class ControllerPackage extends SubsystemBase {
         public double leftY;
         public double rightX;
         public double rightY;
+        public int pov;
         public JoystickButton aButton;
         public JoystickButton bButton;
         public JoystickButton xButton;
@@ -28,11 +29,12 @@ public class ControllerPackage extends SubsystemBase {
     public ControllerPackage(XboxController controller) {
         this.controller = controller;
     }
-    public void updateControllerSet() {
+    private void updateControllerSet() {
         set.leftY = controller.getLeftY();
         set.leftX = controller.getLeftX();
         set.rightX = controller.getRightX();
         set.rightY = controller.getRightY();
+        set.pov = controller.getPOV();
         set.aButton = new JoystickButton(controller, Button.kA.value);
         set.bButton = new JoystickButton(controller, Button.kB.value);
         set.xButton = new JoystickButton(controller, Button.kX.value);
