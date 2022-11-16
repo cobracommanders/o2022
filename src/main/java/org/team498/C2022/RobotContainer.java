@@ -8,6 +8,7 @@ import org.team498.C2022.commands.auto.Auto_1;
 import org.team498.C2022.commands.drivetrain.FieldOrientedDrive;
 import org.team498.C2022.commands.drivetrain.SnapDrive;
 import org.team498.C2022.subsystems.Drivetrain;
+import org.team498.C2022.subsystems.Intake;
 import org.team498.C2022.subsystems.Vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class RobotContainer {
 	private final Vision vision = new Vision();
 	private final Drivetrain drivetrain = new Drivetrain();
+	private final Intake intake = new Intake();
 
 	private final XboxController driverController = new XboxController(kDriverControllerID);
 	private final XboxController operatorController = new XboxController(kOperatorControllerID);
@@ -29,6 +31,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureDriverBindings();
 		drivetrain.setDefaultCommand(new SnapDrive(drivetrain, driverControls.getX(), driverControls.getY(), driverControls.getRotationO(), 0.1, driverControls.getSlowDrive()));
+		intake.setDefaultCommand(new InstantCommand(()-> intake.setState(driverControls.getIntakeState()), intake));
 	}
 	
 

@@ -23,8 +23,8 @@ public class ControllerPackage extends SubsystemBase {
         public JoystickButton backButton;
         public JoystickButton rightBumper;
         public JoystickButton leftBumper;
-        public Trigger leftTrigger;
-        public Trigger rightTrigger;
+        public boolean leftTrigger;
+        public boolean rightTrigger;
     }
     public ControllerPackage(XboxController controller) {
         this.controller = controller;
@@ -41,8 +41,8 @@ public class ControllerPackage extends SubsystemBase {
         set.yButton = new JoystickButton(controller, Button.kY.value);
         set.rightBumper = new JoystickButton(controller, Button.kRightBumper.value);
         set.leftBumper = new JoystickButton(controller, Button.kLeftBumper.value);
-        set.rightTrigger = new Trigger(()-> Math.abs(controller.getRightTriggerAxis()) >= 0.3);
-        set.leftTrigger = new Trigger(()-> Math.abs(controller.getLeftTriggerAxis()) >= 0.3);
+        set.rightTrigger = Math.abs(controller.getRightTriggerAxis()) >= 0.3;
+        set.leftTrigger = Math.abs(controller.getLeftTriggerAxis()) >= 0.3;
     }
     @Override
     public void periodic() {

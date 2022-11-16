@@ -11,6 +11,12 @@ public final class Constants {
 		public static final double kControllerRumbleRange = 150;
 	}
 
+	public static final class IntakeContants {
+		public static final double kIntakeSpeed = 1;
+		public static final double kOuttakeSpeed = -1;
+		public static final double kIdleSpeed = 0;
+	}
+
 	public static final class LimelightConstants {
 		public static final double kVisionTapeHeight = 101.625;
 		public static final double kLimelightMountAngle = 30;
