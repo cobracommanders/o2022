@@ -28,6 +28,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -93,19 +94,6 @@ public class Drivetrain extends SubsystemBase {
 
 	private final Field2d field = new Field2d();
 
-	public void setGyroOffset(double offset) {
-		IMU.reset();
-		this.offset = offset;
-	}
-
-	public synchronized void zeroGyro() {
-		IMU.reset();
-	}
-
-	public synchronized void calibrateGyro() {
-		IMU.calibrate();
-	}
-
 	public Drivetrain() {
 		snapController.enableContinuousInput(-Math.PI, Math.PI);
 		frontLeft = new SwerveModule(
@@ -133,6 +121,7 @@ public class Drivetrain extends SubsystemBase {
 				backLeft,
 				backRight
 		};
+		
 
 		// Setup the kinematics
 		kinematics = new SwerveDriveKinematics(
@@ -146,6 +135,57 @@ public class Drivetrain extends SubsystemBase {
 		matchEncoders();
 
 		resetOdometry(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
+	}
+	// Set a number to 0 which counts up to 500 every 10 seconds to reset the
+	// encoders
+	private int encoderResetTimer = 0;
+	private int idleResetTimer = 0;
+
+	@Override
+	public void periodic() {
+		odometry.update(Rotation2d.fromDegrees(-getYaw() + offset), getModuleStates());
+		field.setRobotPose(getPose());
+		if (encoderResetTimer++ > 500 && !isMoving() && idleResetTimer++ > 50) {
+			matchEncoders();
+			encoderResetTimer = 0;
+			idleResetTimer = 0;
+		}
+		if (isMoving()) {
+			idleResetTimer = 0;
+		}
+		SmartDashboard.putNumber("Angle Setpoint", snapController.getGoal().position);
+		SmartDashboard.putBoolean("moving", isMoving());
+		SmartDashboard.putData(field);
+		SmartDashboard.putNumber("gyro", getYaw180());
+		SmartDashboard.putData(this);
+	}
+	public void setGyroOffset(double offset) {
+		IMU.reset();
+		this.offset = offset;
+	}
+
+	public synchronized void zeroGyro() {
+		IMU.reset();
+	}
+
+	public synchronized void calibrateGyro() {
+		IMU.calibrate();
+	}
+	//TODO: this whole thing could probably exist exclusively in a command
+	public void lockOnCircle(double radius, Transform2d center, double tVelocity, Double t) { //t is Double reference rather than double for use in commands
+		t += tVelocity * Constants.DrivetrainConstants.kMaxVelocityMetersPerSecond / 50; //Max velocity per 20ms
+		double x = Math.sqrt(Math.pow(t, 2) - Math.pow(radius, 2));
+		double y = Math.sqrt(Math.pow(t, 2) - Math.pow(radius, 2));
+		double heading = Math.atan2(x, y); // atan(x / y)
+		double initialHeading = Math.atan2(center.getX(), center.getY()); //TODO: currently assumes that it is facing the target
+		xController.setGoal(x);
+		yController.setGoal(y);
+		snapController.setGoal(heading);
+		double xOutput = xController.calculate(-center.getX());
+		double yOutput = yController.calculate(-center.getY());
+		double headingOutput = snapController.calculate(getYaw180() - initialHeading);
+
+		drive(ChassisSpeeds.fromFieldRelativeSpeeds(xOutput, yOutput, headingOutput, Rotation2d.fromDegrees(getYaw180())));
 	}
 	public double calculateSnapValue() {
         return snapController.calculate(Math.toRadians(getYaw180()));
@@ -188,7 +228,7 @@ public class Drivetrain extends SubsystemBase {
 	}
 
 	public synchronized void resetOdometry(Pose2d pose) {
-		odometry.resetPosition(pose, Rotation2d.fromDegrees(getYaw()));
+		odometry.resetPosition(pose, Rotation2d.fromDegrees(getYaw()));//TODO: should this be getYaw180() ?
 	}
 
 	public synchronized void setModuleStates(SwerveModuleState[] moduleStates) {
@@ -298,29 +338,5 @@ public class Drivetrain extends SubsystemBase {
 		ChassisSpeeds speed = kinematics.toChassisSpeeds(getModuleStates());
 		return ((Math.abs(speed.vxMetersPerSecond) + Math.abs(speed.vyMetersPerSecond)
 				+ Math.abs(speed.omegaRadiansPerSecond)) > 0.1);
-	}
-
-	// Set a number to 0 which counts up to 500 every 10 seconds to reset the
-	// encoders
-	private int encoderResetTimer = 0;
-	private int idleResetTimer = 0;
-
-	@Override
-	public void periodic() {
-		odometry.update(Rotation2d.fromDegrees(-getYaw() + offset), getModuleStates());
-		field.setRobotPose(getPose());
-		if (encoderResetTimer++ > 500 && !isMoving() && idleResetTimer++ > 50) {
-			matchEncoders();
-			encoderResetTimer = 0;
-			idleResetTimer = 0;
-		}
-		if (isMoving()) {
-			idleResetTimer = 0;
-		}
-		SmartDashboard.putNumber("Angle Setpoint", snapController.getGoal().position);
-		SmartDashboard.putBoolean("moving", isMoving());
-		SmartDashboard.putData(field);
-		SmartDashboard.putNumber("gyro", getYaw180());
-		SmartDashboard.putData(this);
 	}
 }
