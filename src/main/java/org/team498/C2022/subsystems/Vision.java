@@ -18,7 +18,6 @@ public class Vision extends SubsystemBase {
     public Vision() {
         cam1.setPipelineIndex(0);
         cam1.setDriverMode(false);
-        pipelineResult = cam1.getLatestResult();
     }
     @Override
     public void periodic() {

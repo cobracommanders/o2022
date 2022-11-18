@@ -14,7 +14,7 @@ public class Curve {
     private int sample;
     public int length = 0;
     /**
-     * 
+     * Constructs a curve sampled from the coefficients between the initial values and target value
      * @param angle angle setpoint in degrees
      * @param coefficients double[] {c, b, a, ...} for polynomial: c + bx + ax^2 + ...
      * @param initialX initial x value

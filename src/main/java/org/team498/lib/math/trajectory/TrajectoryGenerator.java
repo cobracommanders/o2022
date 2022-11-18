@@ -1,8 +1,10 @@
-package org.team498.lib.math;
+package org.team498.lib.math.trajectory;
 
 import java.io.IOException;
 import org.team498.C2022.Constants;
 import org.team498.lib.logging.CSVWriter;
+import org.team498.lib.math.Curve;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class TrajectoryGenerator extends InstantCommand {
