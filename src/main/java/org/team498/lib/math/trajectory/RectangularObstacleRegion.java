@@ -1,7 +1,6 @@
 package org.team498.lib.math.trajectory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.team498.lib.util.TrajectoryUtil;
 
@@ -9,8 +8,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
-
-public class RectangularObstacleRegion {
+/**
+ * Obstacle Region for use with {@link Trajectory}
+ */
+public class RectangularObstacleRegion extends ObstacleRegion {
     final Pose2d bottomLeftPoint;
     final Pose2d bottomRightPoint;
     final Pose2d topRightPoint;
@@ -22,31 +23,13 @@ public class RectangularObstacleRegion {
         this.topLeftPoint = new Pose2d(bottomLeftPoint.getX(), topRightPoint.getY(), new Rotation2d());
     }
     /**
-     * Recalculates a Trajectory to avoid a set of RectangularObstacleRegions
-     * @param trajectory trajectory to recalculate
-     * @param regions regions to avoid
-     * @return new Trajectory that avoids listed regions
-     */
-    public static Trajectory recalculateTrajectory(Trajectory trajectory, List<RectangularObstacleRegion> regions) {
-        Trajectory result = TrajectoryUtil.generateTrajectory(trajectory.features); //create new trajectory so as to avoid conflicting references
-        for (RectangularObstacleRegion region : regions) {
-            if (!region.isOnTrajectory(trajectory)) { //if region is not on trajectory, no need to avoid
-                regions.remove(region);
-            }
-        }
-        for (RectangularObstacleRegion region : regions) { //for each region, calculate a new trajectory to avoid the region
-            result = region.calculateTrajectory(trajectory);
-        }
-        return result;
-    }
-    /**
      * calculates Trajectory to avoid this region
-     * @param trajectory Trajectory to modify
-     * @return new Trajectory that avoids this region
-     * @apiNote use {@code recalculateTrajectory()} for most applications
+     * @param trajectory {@link Trajectory} to modify 
+     * @return new {@link Trajectory} that avoids this region
+     * @apiNote use {@link #recalculateTrajectory()} for most applications
      * 
      */
-    private Trajectory calculateTrajectory(Trajectory trajectory) {
+    public Trajectory calculateTrajectory(Trajectory trajectory) {
         Pose2d initial = trajectory.features.start;
         ArrayList<Translation2d> waypoints = trajectory.features.waypoints;
         Pose2d end = trajectory.features.end;
@@ -66,7 +49,7 @@ public class RectangularObstacleRegion {
      * @return two corner Translation2d that will nav robot around region
      * @apiNote result is relative to the initial pose of the trajectory
      */
-    private Translation2d[] findAvoidanceWaypoints(Trajectory trajectory) {
+    public Translation2d[] findAvoidanceWaypoints(Trajectory trajectory) {
         ArrayList<Translation2d> waypoints = new ArrayList<Translation2d>();
         Translation2d brPoint; //min translation to bottom right corner
         Translation2d blPoint; //min translation to bottom left corner
@@ -124,6 +107,11 @@ public class RectangularObstacleRegion {
         }
         
     }
+    /**
+     * Checks if trajectory overlaps the region
+     * @param trajectory {@link Trajectory} to check
+     * @return {@code true} if trajectory overlaps the region
+     */
     public boolean isOnTrajectory(Trajectory trajectory) {
         for (Trajectory.State state : trajectory.getStates()) {
             if (isInRegion(state.poseMeters)) {
@@ -132,10 +120,10 @@ public class RectangularObstacleRegion {
         }
         return false;
     }
-    private boolean isInRegion(Pose2d pose) {
+    public boolean isInRegion(Pose2d pose) {
         return isInRegion(pose.getX(), pose.getY());
     }
-    private boolean isInRegion(double x, double y) {
+    public boolean isInRegion(double x, double y) {
         return (x >= bottomLeftPoint.getX() && x <= topRightPoint.getX()
             && (y >= bottomLeftPoint.getY() && y <= topRightPoint.getY()));
     }
