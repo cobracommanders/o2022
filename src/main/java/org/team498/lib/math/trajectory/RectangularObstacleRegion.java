@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 /**
- * Obstacle Region for use with {@link Trajectory}
+ * Obstacle Region for use with {@link Trajectory Trajectories}
  */
 public class RectangularObstacleRegion extends ObstacleRegion {
     final Pose2d bottomLeftPoint;
@@ -26,8 +26,7 @@ public class RectangularObstacleRegion extends ObstacleRegion {
      * calculates Trajectory to avoid this region
      * @param trajectory {@link Trajectory} to modify 
      * @return new {@link Trajectory} that avoids this region
-     * @apiNote use {@link #recalculateTrajectory()} for most applications
-     * 
+     * @apiNote use {@link ObstacleRegion#recalculateTrajectory()} for most applications
      */
     public Trajectory calculateTrajectory(Trajectory trajectory) {
         Pose2d initial = trajectory.features.start;
@@ -38,7 +37,7 @@ public class RectangularObstacleRegion extends ObstacleRegion {
             if (isInRegion(waypoints.get(i).getX(), waypoints.get(i).getY())) {
                 Translation2d[] newWaypoints = findAvoidanceWaypoints(trajectory);
                 waypoints.add(i++, newWaypoints[0]);
-                waypoints.add(i++, newWaypoints[1]);
+                waypoints.add(i, newWaypoints[1]);
             }
         }
         return TrajectoryUtil.generateTrajectory(initial, end, waypoints, config);
