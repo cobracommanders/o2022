@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Curve {
     private final double angle;
     double[] coefficients;
-    ArrayList<double[]> positions = new ArrayList<double[]>();
+    public ArrayList<double[]> positions = new ArrayList<double[]>();
     private final double initialX;
     private final double target;
     private final boolean isTargetX;

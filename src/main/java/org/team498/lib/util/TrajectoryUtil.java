@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.team498.lib.math.trajectory.Trajectory;
+import org.team498.lib.math.trajectory.Trajectory.PathFeatures;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,6 +33,11 @@ public class TrajectoryUtil {
     public static Trajectory generateTrajectory(Pose2d start, Pose2d end, ArrayList<Translation2d> waypoints, TrajectoryConfig config) {
         Trajectory result = (Trajectory) TrajectoryGenerator.generateTrajectory(start, waypoints, end, config);
         result.features = new Trajectory.PathFeatures(start, end, waypoints, config);
+        return result;
+    }
+    public static Trajectory generateTrajectory(PathFeatures features) {
+        Trajectory result = (Trajectory) TrajectoryGenerator.generateTrajectory(features.start, features.waypoints, features.end, features.config);
+        result.features = new Trajectory.PathFeatures(features.start, features.end, features.waypoints, features.config);
         return result;
     }
 }
