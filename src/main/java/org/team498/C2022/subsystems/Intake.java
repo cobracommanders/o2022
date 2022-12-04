@@ -5,6 +5,14 @@ import org.team498.C2022.Constants.IntakeContants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
+    private static Intake mInstance;
+
+	public static Intake getInstance() {
+		if (mInstance == null) {
+			mInstance = new Intake();
+		}
+		return mInstance;
+	}
     private State state = State.IDLE;
 
     public enum State {

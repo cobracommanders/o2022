@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class DriverController extends ControllerPackage {
     private final XboxController controller;
-    private final Drivetrain drivetrain;
+    private final Drivetrain drivetrain = Drivetrain.getInstance();
 
 	DoubleSupplier x;
 	DoubleSupplier y;
@@ -25,10 +25,9 @@ public class DriverController extends ControllerPackage {
 	Intake.State intakeState;
 	double wristState;
 
-    public DriverController(XboxController controller, Drivetrain drivetrain) {
+    public DriverController(XboxController controller) {
         super(controller);
         this.controller = controller;
-        this.drivetrain = drivetrain;
 		updateDriverSet();
     }
 

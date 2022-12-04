@@ -19,14 +19,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
 	//private final Vision vision = new Vision();
-	private final Drivetrain drivetrain = new Drivetrain();
-	private final Intake intake = new Intake();
-	private final Wrist wrist = new Wrist();
+	private final Drivetrain drivetrain = Drivetrain.getInstance();
+	private final Intake intake = Intake.getInstance();
+	private final Wrist wrist = Wrist.getInstance();
 
 	private final XboxController driverController = new XboxController(kDriverControllerID);
 	private final XboxController operatorController = new XboxController(kOperatorControllerID);
 
-	private final DriverController driverControls = new DriverController(driverController, drivetrain);
+	private final DriverController driverControls = new DriverController(driverController);
 
 	public RobotContainer() {
 		configureDriverBindings();
