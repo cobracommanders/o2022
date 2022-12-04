@@ -14,23 +14,22 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class DriverController extends ControllerPackage {
     private final XboxController controller;
     private final Drivetrain drivetrain;
-    public DriverSet set = new DriverSet();
 
-    class DriverSet {
-        DoubleSupplier x;
-        DoubleSupplier y;
-        DoubleSupplier rotationO;
-        DoubleSupplier rotationD;
-        JoystickButton resetPose;
-        JoystickButton controlSet;
-        JoystickButton slowDrive;
-        Intake.State intakeState;
-    }
+	DoubleSupplier x;
+	DoubleSupplier y;
+	DoubleSupplier rotationO;
+	DoubleSupplier rotationD;
+	JoystickButton resetPose;
+	JoystickButton controlSet;
+	JoystickButton slowDrive;
+	Intake.State intakeState;
+	double wristState;
 
     public DriverController(XboxController controller, Drivetrain drivetrain) {
         super(controller);
         this.controller = controller;
         this.drivetrain = drivetrain;
+		updateDriverSet();
     }
 
     @Override
@@ -39,54 +38,66 @@ public class DriverController extends ControllerPackage {
         updateDriverSet();
     }
     private void updateDriverSet() {
-        set.x = ()-> squareInput(-super.set.leftY);
-        set.y = ()-> squareInput(-super.set.leftX);
-        set.rotationO = ()-> updateRotationSetpoint(controller, drivetrain);
-        set.rotationD = ()-> squareInput(super.set.rightX);
-        set.resetPose = super.set.aButton;
-        set.controlSet = super.set.leftBumper;
-        set.slowDrive = super.set.rightBumper;
-        set.intakeState = updateIntakeState();
+        x = ()-> squareInput(-super.leftY);
+        y = ()-> squareInput(-super.leftX);
+        rotationO = ()-> updateRotationSetpoint(controller, drivetrain);
+        rotationD = ()-> squareInput(super.rightX);
+        resetPose = super.aButton;
+        controlSet = super.leftBumper;
+        slowDrive = super.rightBumper;
+        intakeState = updateIntakeState();
+		wristState = updateWristState();
     }
     public DoubleSupplier getX() {
-        return set.x;
+        return x;
     }
     public DoubleSupplier getY() {
-        return set.y;
+        return y;
     }
     public DoubleSupplier getRotationO() {
-        return set.rotationO;
+        return rotationO;
     }
     public DoubleSupplier getRotationD() {
-        return set.rotationD;
+        return rotationD;
     }
     public JoystickButton getResetPose() {
-        return set.resetPose;
+        return resetPose;
     }
     public JoystickButton getControlSet() {
-        return set.resetPose;
+        return resetPose;
     }
     public BooleanSupplier getSlowDrive() {
-        return set.slowDrive;
+        return slowDrive;
     }
     public Intake.State getIntakeState() {
-        return set.intakeState;
+        return intakeState;
     }
+	public double getWristState() {
+		return wristState;
+	}
 
     private double squareInput(double input) {
         return Math.copySign(Math.pow(input, 2), input);
     }
     private Intake.State updateIntakeState() {
-        if (super.set.leftTrigger) {
+        if (super.leftTrigger) {
             return State.INTAKE;
         } 
-        else if (super.set.rightTrigger) {
+        else if (super.rightTrigger) {
             return State.OUTTAKE;
         }
         else {
             return State.IDLE;
         }
     }
+	private double updateWristState() {
+		if (super.leftTrigger || super.rightTrigger) {
+            return 1;
+        } 
+        else {
+            return 0;
+        }
+	}
     private double updateRotationSetpoint(XboxController controller, Drivetrain drivetrain) {
         if (isPOVActive()) {
             return getPOVAngle(drivetrain);
@@ -96,9 +107,9 @@ public class DriverController extends ControllerPackage {
     }
 	private double getControllerAngle(Drivetrain drivetrain) {
 
-		double inputY = (Math.abs(super.set.rightY) > .1) ? super.set.rightY : 0.0001;
-		double inputX = (Math.abs(super.set.rightX) > .1) ? -super.set.rightX : 0.0001;
-		if (Math.abs(super.set.rightY) < .5 && Math.abs(super.set.rightX) < .5) {
+		double inputY = (Math.abs(super.rightY) > .1) ? super.rightY : 0.0001;
+		double inputX = (Math.abs(super.rightX) > .1) ? -super.rightX : 0.0001;
+		if (Math.abs(super.rightY) < .5 && Math.abs(super.rightX) < .5) {
 			inputY = 0.0001;
 			inputX = 0.0001;
 		}
@@ -114,7 +125,7 @@ public class DriverController extends ControllerPackage {
 		return angle;
 	}
 	private double getPOVAngle(Drivetrain drivetrain) {
-		double input = super.set.pov;
+		double input = super.pov;
 		double result;
 		if (input != -1) {
 			if (input > 180) {
@@ -130,6 +141,6 @@ public class DriverController extends ControllerPackage {
 		return result - 90;
 	}
     private boolean isPOVActive() {
-        return super.set.pov != -1;
+        return super.pov != -1;
     }
 }

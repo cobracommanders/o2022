@@ -11,6 +11,18 @@ public final class Constants {
 		public static final double kControllerRumbleRange = 150;
 	}
 
+	public static final class WristConstants {
+		public static final double kInPosition = 0;
+		public static final double kOutPosition = 2;
+		public static final int leftID = 31;
+		public static final int rightID = 37;
+		public static final double kP = 0.6;
+		public static final double kI = 0;
+		public static final double kD = 0;
+		public static final double kMaxVelocity = 3;
+		public static final double kMaxAcceleration = Math.pow(kMaxVelocity, 2);
+	}
+
 	public static final class IntakeContants {
 		public static final double kIntakeSpeed = 1;
 		public static final double kOuttakeSpeed = -1;
