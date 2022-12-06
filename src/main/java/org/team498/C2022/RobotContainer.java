@@ -1,44 +1,38 @@
 package org.team498.C2022;
 
-import org.team498.C2022.commands.CalibrateGyro;
-import org.team498.C2022.commands.auto.Auto_1;
-import org.team498.C2022.commands.drivetrain.TeleDrive;
-import org.team498.C2022.commands.wrist.SetWrist;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import org.team498.lib.util.Trajectories;
+import org.team498.C2022.commands.drivetrain.FieldOrientedDrive;
+import org.team498.C2022.commands.drivetrain.SnapDrive;
+import org.team498.C2022.commands.drivetrain.TrajectoryFollower;
 import org.team498.C2022.subsystems.Drivetrain;
-import org.team498.C2022.subsystems.Wrist;
+import org.team498.lib.drivers.Xbox;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import static org.team498.C2022.Constants.OIConstants;
 
 public class RobotContainer {
-	private static RobotContainer mInstance;
+    private final Drivetrain drivetrain;
+    private static final Xbox xbox = new Xbox(OIConstants.DRIVER_CONTROLLER_ID);
 
-	public static RobotContainer getInstance() {
-		if (mInstance == null) {
-			mInstance = new RobotContainer();
-		}
-		return mInstance;
-	}
+    public RobotContainer() {
+        drivetrain = Drivetrain.getInstance();
+        drivetrain.setInitialPose(new Pose2d(8, 4, Rotation2d.fromDegrees(90)));
+        xbox.setDeadzone(0.2);
+        xbox.setTriggerThreshold(0.2);
 
-	// private final Vision vision = new Vision();
-	private final Drivetrain drivetrain = Drivetrain.getInstance();
+        configureButtonBindings();
 
-	private final DriverController driverControls = DriverController.getInstance();
+        drivetrain.setDefaultCommand(new SnapDrive(xbox::leftX, xbox::leftY, xbox::RAngle));
+    }
 
-	public RobotContainer() {
-		configureDriverBindings();
-		drivetrain.setDefaultCommand(new TeleDrive());
-	}
 
-	private void configureDriverBindings() {
-		driverControls.aButton.whenPressed(new SetWrist(Wrist.State.OUT));
-		driverControls.bButton.whenPressed(new SetWrist(Wrist.State.IN));
-	}
+    private void configureButtonBindings() {
+        xbox.A().whenActive(new InstantCommand(drivetrain::zeroGyro));
+        xbox.X().toggleWhenActive(new FieldOrientedDrive(xbox::leftX, xbox::leftY, xbox::rightX));
+        xbox.start().whenActive(new TrajectoryFollower(Trajectories.getTrajectory("test")));
+    }
 
-	public Command getAutoCommand() {
-		return new Auto_1(drivetrain);
-	}
-
-	public Command getRobotInitCommand() {
-		return new CalibrateGyro(drivetrain);
-	}
 }
+

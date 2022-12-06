@@ -1,17 +1,18 @@
 package org.team498.C2022;
 
-import org.team498.C2022.subsystems.Drivetrain;
-import org.team498.C2022.subsystems.Vision;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.team498.C2022.subsystems.Drivetrain;
+import org.team498.C2022.subsystems.Vision;
 
 public class RobotState extends SubsystemBase {
-    private final Vision vision = Vision.getInstance();
-    private final Drivetrain drivetrain = Drivetrain.getInstance();
+    private final Vision vision;
+    private final Drivetrain drivetrain;
 
-    public RobotState() {
+    private RobotState() {
+        this.vision = Vision.getInstance();
+        this.drivetrain = Drivetrain.getInstance();
     }
 
     public Transform2d getRobotToField() {
@@ -42,8 +43,12 @@ public class RobotState extends SubsystemBase {
         return new Pose2d(pose.getX(), pose.getY(), pose.getRotation());
     }
 
-    @Override
-    public void periodic() {
-        drivetrain.resetOdometry(toPose2d(getRobotToField()));
+    private static RobotState instance;
+
+    public static RobotState getInstance() {
+        if (instance == null) {
+            instance = new RobotState();
+        }
+        return instance;
     }
 }
