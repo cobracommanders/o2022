@@ -5,12 +5,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
-	private RobotContainer robotContainer;
+	private RobotContainer robotContainer = RobotContainer.getInstance();
 	private Command autoCommand;
 
 	@Override
 	public void robotInit() {
-		robotContainer = new RobotContainer();
 		robotContainer.getRobotInitCommand().schedule();
 	}
 

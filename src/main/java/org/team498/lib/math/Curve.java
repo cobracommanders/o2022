@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Curve {
     private final double angle;
     double[] coefficients;
-    ArrayList<double[]> positions = new ArrayList<double[]>();
+    public ArrayList<double[]> positions = new ArrayList<double[]>();
     private final double initialX;
     private final double target;
     private final boolean isTargetX;
@@ -14,7 +14,7 @@ public class Curve {
     private int sample;
     public int length = 0;
     /**
-     * 
+     * Constructs a curve sampled from the coefficients between the initial values and target value
      * @param angle angle setpoint in degrees
      * @param coefficients double[] {c, b, a, ...} for polynomial: c + bx + ax^2 + ...
      * @param initialX initial x value

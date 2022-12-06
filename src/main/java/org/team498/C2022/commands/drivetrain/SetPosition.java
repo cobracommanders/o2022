@@ -6,22 +6,20 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SetPosition extends CommandBase {
-	private final Drivetrain drivetrain;
+	private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final double x;
     private final double y;
 	private final double angle;
 	/**
 	 * Snaps drivetrain to angle
-	 * @param drivetrain
+	 * @requires {@link Drivetrain drivetrain}
 	 * @param angle degrees
 	 */
-	public SetPosition(Drivetrain drivetrain, double x, double y, double angle) {
-		this.drivetrain = drivetrain;
+	public SetPosition(double x, double y, double angle) {
 		this.angle = angle;
         this.x = x;
         this.y = y;
         addRequirements(drivetrain);
-        drivetrain.setPosition(x, y, angle);
 	}
 
 	@Override
