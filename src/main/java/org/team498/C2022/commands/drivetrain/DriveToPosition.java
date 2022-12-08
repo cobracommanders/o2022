@@ -35,6 +35,6 @@ public class DriveToPosition extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.drive(new ChassisSpeeds(0, 0, 0));
+        drivetrain.drive(new ChassisSpeeds());
     }
 }

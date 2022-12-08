@@ -11,8 +11,8 @@ public final class Ports {
     public static final int BL_STEER_MOTOR_ID = 2;
     public static final int BR_STEER_MOTOR_ID = 8;
 
-    public static final int FR_CAN_CODER_ID = 13;
-    public static final int FL_CAN_CODER_ID = 12;
-    public static final int BR_CAN_CODER_ID = 14;
-    public static final int BL_CAN_CODER_ID = 11;
+    public static final int FR_CANCODER_ID = 13;
+    public static final int FL_CANCODER_ID = 12;
+    public static final int BR_CANCODER_ID = 14;
+    public static final int BL_CANCODER_ID = 11;
 }

@@ -36,11 +36,11 @@ public class FieldOrientedDrive extends CommandBase {
         drivetrain.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xTranslation,
                                                                yTranslation,
                                                                rotation,
-                                                               Rotation2d.fromDegrees(drivetrain.getYaw180())));
+                                                               Rotation2d.fromDegrees(drivetrain.getYaw())));
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+        drivetrain.drive(new ChassisSpeeds());
     }
 }

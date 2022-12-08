@@ -48,12 +48,12 @@ public class TargetLock extends CommandBase {
 
         double xOutput = drivetrain.calculateXController(-state.getX());
         double yOutput = drivetrain.calculateYController(-state.getY());
-        double headingOutput = drivetrain.calculateSnapController(drivetrain.getYaw180() - initialHeading);
+        double headingOutput = drivetrain.calculateSnapController(drivetrain.getYaw() - initialHeading);
 
         drivetrain.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xOutput,
                                                                yOutput,
                                                                headingOutput,
-                                                               Rotation2d.fromDegrees(drivetrain.getYaw180())));
+                                                               Rotation2d.fromDegrees(drivetrain.getYaw())));
 
 
     }

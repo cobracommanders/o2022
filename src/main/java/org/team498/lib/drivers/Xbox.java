@@ -2,8 +2,8 @@ package org.team498.lib.drivers;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.team498.lib.util.RotationUtil;
 
-@SuppressWarnings("GrazieInspection")
 public class Xbox {
     private final int port;
     private double deadzone = 0;
@@ -141,16 +141,18 @@ public class Xbox {
      *
      * @return the angle of the right joystick
      */
-    public double RAngle() {
+    public double rightAngle() {
         double x = getAxis(Axis.RightX);
         double y = getAxis(Axis.RightY);
-        if (x == 0 && y == 0) return lastAngleRight;
+        if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) return lastAngleRight;
 
         double result = Math.toDegrees(Math.atan2(-x, -y));
 
         if (result < 0) {
             result += 360;
         }
+
+        result = RotationUtil.toSignedDegrees(result);
 
         lastAngleRight = result;
         return result;
@@ -164,16 +166,18 @@ public class Xbox {
      *
      * @return the angle of the left joystick
      */
-    public double LAngle() {
+    public double leftAngle() {
         double x = getAxis(Axis.LeftX);
         double y = getAxis(Axis.LeftY);
-        if (x == 0 && y == 0) return lastAngleLeft;
+        if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) return lastAngleLeft;
 
         double result = Math.toDegrees(Math.atan2(-x, -y));
 
         if (result < 0) {
             result += 360;
         }
+
+        result = RotationUtil.toSignedDegrees(result);
 
         lastAngleLeft = result;
         return result;
@@ -200,7 +204,7 @@ public class Xbox {
      *
      * @return the value of the POV
      */
-    public int getPOV() {
+    public int getRawPOV() {
         return DriverStation.getStickPOV(port, 0);
     }
 
@@ -211,13 +215,14 @@ public class Xbox {
      *
      * @return the angle of the POV
      */
-    public double getPOVAngle() {
-        double angle = getPOV();
+    public double POVAngle() {
+        double angle = getRawPOV();
         if (angle == -1) return lastAnglePOV;
+
+        angle = -RotationUtil.toSignedDegrees(angle);
 
         lastAnglePOV = angle;
         return angle;
     }
-
 }
 

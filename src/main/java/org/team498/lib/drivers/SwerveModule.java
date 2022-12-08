@@ -22,7 +22,6 @@ public class SwerveModule extends SubsystemBase {
     private final double angleOffset;
     // TODO test current limiting
 
-
     private double lastAngle;
 
     public SwerveModule(TalonFX driveMotor, TalonFX steerMotor, CANCoder CANCoder, double angleOffset) {
@@ -70,6 +69,7 @@ public class SwerveModule extends SubsystemBase {
                                                            Units.inchesToMeters(DRIVE_WHEEL_DIAMETER),
                                                            MK4I_DRIVE_REDUCTION_L2);
         driveMotor.set(ControlMode.Velocity, velocity);
+
 
         double angle = (Math.abs(velocity) <= MAX_VELOCITY_METERS_PER_SECOND * 0.01) && !forcedAngle
                        ? lastAngle
