@@ -56,7 +56,10 @@ public class TeleRobot extends CommandBase {
         while (isShooting.getAsBoolean()) {
             Pose2d target = new Pose2d(0, 0, new Rotation2d(0));
             drivetrain.targetPointDrive(x, y, target);
-            shooter.setVisionSpeed(Math.hypot(x - target.getX(), y - target.getY()));
+            double dt = 0.1; //loop time idk what it really is or if we can get it from somewhere
+            //it's used to extrapolated the rate of change of the robot
+            
+            shooter.setVisionSpeed(Math.hypot(x/dt, y/dt)); //offset for predicted robot movement (this is why the robot speed must be locked)
         }
 
         if (offense.getAsBoolean()) { // offensive turn ability
