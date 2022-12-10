@@ -1,25 +1,9 @@
 package org.team498.C2022.subsystems;
 
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackLeftDriveMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackLeftEncoderID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackLeftModuleOffset;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackLeftSteerMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackRightDriveMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackRightEncoderID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackRightModuleOffset;
-import static org.team498.C2022.Constants.DrivetrainConstants.kBackRightSteerMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontLeftDriveMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontLeftEncoderID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontLeftModuleOffset;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontLeftSteerMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontRightDriveMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontRightEncoderID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontRightModuleOffset;
-import static org.team498.C2022.Constants.DrivetrainConstants.kFrontRightSteerMotorID;
-import static org.team498.C2022.Constants.DrivetrainConstants.kMaxVelocityMetersPerSecond;
-import static org.team498.C2022.Constants.DrivetrainConstants.kSwerveModuleDistanceFromCenter;
+import static org.team498.C2022.Constants.DrivetrainConstants.*;
 
 import org.team498.C2022.Constants;
+import org.team498.C2022.RobotState;
 import org.team498.lib.drivers.SwerveModule;
 import org.team498.lib.util.TimeDelayedBoolean;
 
@@ -51,6 +35,7 @@ public class Drivetrain extends SubsystemBase {
 		}
 		return mInstance;
 	}
+	private final RobotState robotState = RobotState.getInstance();
 
 	public ProfiledPIDController snapController = new ProfiledPIDController(
 		Constants.SnapConstants.kP,
@@ -265,6 +250,24 @@ public class Drivetrain extends SubsystemBase {
 	// 	drive(ChassisSpeeds.fromFieldRelativeSpeeds(translation2d.getX(), translation2d.getY(), angleAdjustment, Rotation2d.fromDegrees(getYaw180())));
     //     //drive(translation2d, angleAdjustment, fieldRelative, false);
     // }
+
+	/**
+	 * keeps the drivetrain pointed at a particular field point while driving
+	 * @param x
+	 * @param y
+	 * @param targetPoint {@link Pose2d} coordinate to aim at
+	 */
+	public void targetPointDrive(double x, double y, Pose2d targetPoint) {
+		//TODO: test implementation
+		double targetHeading = Math.atan2(robotState.getRobotToTarget().getY(), robotState.getRobotToTarget().getX());
+		snapController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
+        double angleAdjustment = snapController.calculate(Math.toRadians(getYaw180()));
+		if (snapController.atGoal()) {
+			angleAdjustment = 0;
+		}
+		SmartDashboard.putNumber("Angle adjustment", angleAdjustment);
+		drive(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, angleAdjustment, Rotation2d.fromDegrees(getYaw180() + offset)));
+	}
 	public void angleAlignDrive(double x, double y, double targetHeading) {
         snapController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
         double angleAdjustment = snapController.calculate(Math.toRadians(getYaw180()));

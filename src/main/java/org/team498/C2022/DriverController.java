@@ -33,6 +33,7 @@ public class DriverController extends ControllerPackage {
     JoystickButton slowDrive;
     Intake.State intakeState;
     double wristState;
+    JoystickButton isShooting;
 
     private DriverController(XboxController controller) {
         super(controller);
@@ -52,10 +53,11 @@ public class DriverController extends ControllerPackage {
         rotationO = () -> updateRotationSetpoint(controller, drivetrain);
         rotationD = () -> squareInput(super.rightX);
         resetPose = super.aButton;
-        controlSet = super.leftBumper;
+        controlSet = super.xButton;
         slowDrive = super.rightBumper;
         intakeState = updateIntakeState();
         wristState = updateWristState();
+        isShooting = super.leftBumper;
     }
 
     public DoubleSupplier getX() {
@@ -92,6 +94,10 @@ public class DriverController extends ControllerPackage {
 
     public double getWristState() {
         return wristState;
+    }
+
+    public JoystickButton getIsShooting() {
+        return isShooting;
     }
 
     private double squareInput(double input) {

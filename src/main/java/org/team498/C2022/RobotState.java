@@ -8,10 +8,18 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotState extends SubsystemBase {
+    private static RobotState mInstance;
+
+    public static RobotState getInstance() {
+        if (mInstance == null) {
+            mInstance = new RobotState();
+        }
+        return mInstance;
+    }
     private final Vision vision = Vision.getInstance();
     private final Drivetrain drivetrain = Drivetrain.getInstance();
 
-    public RobotState() {
+    private RobotState() {
     }
 
     public Transform2d getRobotToField() {
@@ -40,6 +48,9 @@ public class RobotState extends SubsystemBase {
 
     public Pose2d toPose2d(Transform2d pose) {
         return new Pose2d(pose.getX(), pose.getY(), pose.getRotation());
+    }
+    public double getRobotToTargetDistance() {
+        return Math.hypot(this.getRobotToTarget().getX(), this.getRobotToTarget().getY());
     }
 
     @Override
