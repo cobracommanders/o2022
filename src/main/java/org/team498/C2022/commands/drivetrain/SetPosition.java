@@ -7,29 +7,33 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SetPosition extends CommandBase {
 	private final Drivetrain drivetrain = Drivetrain.getInstance();
-    private final double x;
-    private final double y;
+	private final double x;
+	private final double y;
 	private final double angle;
+
 	/**
 	 * Snaps drivetrain to angle
+	 * 
 	 * @requires {@link Drivetrain drivetrain}
 	 * @param angle degrees
 	 */
 	public SetPosition(double x, double y, double angle) {
 		this.angle = angle;
-        this.x = x;
-        this.y = y;
-        addRequirements(drivetrain);
+		this.x = x;
+		this.y = y;
+		addRequirements(drivetrain);
 	}
 
 	@Override
 	public void execute() {
-        drivetrain.setPosition(x, y, angle);
+		drivetrain.setPosition(x, y, angle);
 	}
+
 	@Override
 	public void end(boolean interrupted) {
 		drivetrain.drive(new ChassisSpeeds());
 	}
+
 	@Override
 	public boolean isFinished() {
 		return drivetrain.atPosition();

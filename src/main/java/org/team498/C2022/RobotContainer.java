@@ -8,6 +8,7 @@ import org.team498.C2022.subsystems.Drivetrain;
 import org.team498.C2022.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
 	private static RobotContainer mInstance;
@@ -30,8 +31,9 @@ public class RobotContainer {
 	}
 
 	private void configureDriverBindings() {
-		driverControls.aButton.whenPressed(new SetWrist(Wrist.State.OUT));
-		driverControls.bButton.whenPressed(new SetWrist(Wrist.State.IN));
+		//driverControls.aButton.whenPressed(new SetWrist(Wrist.State.OUT));
+		//driverControls.bButton.whenPressed(new SetWrist(Wrist.State.IN));
+		driverControls.aButton.whenPressed(new InstantCommand(() -> drivetrain.IMU.reset()));
 	}
 
 	public Command getAutoCommand() {

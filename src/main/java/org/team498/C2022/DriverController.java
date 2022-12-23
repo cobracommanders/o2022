@@ -47,8 +47,8 @@ public class DriverController extends ControllerPackage {
     }
 
     private void updateDriverSet() {
-        x = () -> squareInput(-super.leftY);
-        y = () -> squareInput(-super.leftX);
+        x = () -> -squareInput(-super.leftY);
+        y = () -> -squareInput(-super.leftX);
         rotationO = () -> updateRotationSetpoint(controller, drivetrain);
         rotationD = () -> squareInput(super.rightX);
         resetPose = super.aButton;
