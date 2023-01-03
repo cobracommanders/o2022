@@ -5,6 +5,7 @@ import org.team498.C2022.commands.auto.Auto_1;
 import org.team498.C2022.commands.drivetrain.TeleDrive;
 import org.team498.C2022.commands.drivetrain.archive.FieldOrientedDrive;
 import org.team498.C2022.commands.drivetrain.archive.OffenseDrive;
+import org.team498.C2022.commands.drivetrain.archive.RobotOrientedDrive;
 import org.team498.C2022.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,10 +37,11 @@ public class RobotContainer {
 		driverControls.aButton.whenPressed(new InstantCommand(() -> drivetrain.IMU.reset()));
 
 		driverControls.getControlSet().toggleWhenActive(new FieldOrientedDrive());
+		driverControls.getRobotOriented().toggleWhenActive(new RobotOrientedDrive());
 	}
 
 	public Command getAutoCommand() {
-		return new Auto_1(drivetrain);
+		return new Auto_1();
 	}
 
 	public Command getRobotInitCommand() {

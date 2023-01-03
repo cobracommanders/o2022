@@ -32,6 +32,7 @@ public class DriverController extends ControllerPackage {
 	JoystickButton resetPose;
 	JoystickButton controlSet;
 	JoystickButton slowDrive;
+	JoystickButton robotOriented;
 	Intake.State intakeState;
 	double wristState;
 
@@ -53,8 +54,9 @@ public class DriverController extends ControllerPackage {
 		rotationO = () -> updateRotationSetpoint(controller, drivetrain);
 		rotationD = () -> squareInput(-super.rightX);
 		resetPose = super.aButton;
-		controlSet = super.leftBumper;
+		controlSet = super.xButton;
 		slowDrive = super.rightBumper;
+		robotOriented = super.leftBumper;
 		intakeState = updateIntakeState();
 		wristState = updateWristState();
 	}
@@ -89,6 +91,10 @@ public class DriverController extends ControllerPackage {
 
 	public Intake.State getIntakeState() {
 		return intakeState;
+	}
+
+	public JoystickButton getRobotOriented() {
+		return robotOriented;
 	}
 
 	public double getWristState() {
@@ -166,13 +172,13 @@ public class DriverController extends ControllerPackage {
 
 		switch (input) {
 			case 0: result = 0; break;
-			case 45: result = 135; break;
+			case 45: result = -45; break;
 			case 90: result = -90; break;
-			case 135: result = 45; break;
+			case 135: result = -135; break;
 			case 180: result = 180; break;
-			case 225: result = -45; break;
+			case 225: result = 135; break;
 			case 270: result = 90; break;
-			case 315: result = -135; break;
+			case 315: result = 45; break;
 		}
 
 		drivetrain.lastAngle = result - 90;

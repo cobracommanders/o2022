@@ -1,19 +1,16 @@
 package org.team498.C2022.commands.drivetrain.archive;
 
+import java.util.function.DoubleSupplier;
+
+import org.team498.C2022.Constants.DrivetrainConstants;
+import org.team498.C2022.DriverController;
+import org.team498.C2022.subsystems.Drivetrain;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
-import org.team498.C2022.DriverController;
-import org.team498.C2022.Constants.DrivetrainConstants;
-import org.team498.C2022.subsystems.Drivetrain;
 
 // Controls the robot in field oriented mode
 public class OffenseDrive extends CommandBase {
@@ -39,7 +36,7 @@ public class OffenseDrive extends CommandBase {
 
 		double xTranslation = translationXSupplier.getAsDouble() * driveSpeed * DrivetrainConstants.kMaxVelocityMetersPerSecond;
 		double yTranslation = translationYSupplier.getAsDouble() * driveSpeed * DrivetrainConstants.kMaxVelocityMetersPerSecond;
-		double rotation = rotationSupplier.getAsDouble() * DrivetrainConstants.kMaxVelocityMetersPerSecond;
+		double rotation = rotationSupplier.getAsDouble();
 
 		if (DriverController.getInstance().getRotationActive() || hasSnappedBefore) {
 			hasSnappedBefore = true;

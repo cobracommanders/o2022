@@ -1,9 +1,9 @@
 package org.team498.C2022.commands.drivetrain;
 
 import org.team498.C2022.subsystems.Drivetrain;
-import org.team498.lib.math.trajectory.Trajectory;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

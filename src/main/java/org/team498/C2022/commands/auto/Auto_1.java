@@ -4,14 +4,18 @@ import org.team498.C2022.auto.PathLib;
 import org.team498.C2022.commands.drivetrain.WPIDrive;
 import org.team498.C2022.subsystems.Drivetrain;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class Auto_1 extends SequentialCommandGroup {
-    public Auto_1(Drivetrain drivetrain) {
+	private Drivetrain drivetrain = Drivetrain.getInstance();
+    public Auto_1() {
+
         addRequirements(drivetrain);
         addCommands(
-            new WPIDrive(PathLib.auto_1_leg_1),
-            new WPIDrive(PathLib.auto_1_leg_2)
+			new InstantCommand(() -> drivetrain.setGyroOffset(PathLib.unnamed.getInitialPose().getRotation().getDegrees())),
+			new InstantCommand(() -> drivetrain.resetOdometry(PathLib.unnamed.getInitialPose())),
+            new WPIDrive(PathLib.unnamed)
         );
     }
 }
