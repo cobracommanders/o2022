@@ -18,7 +18,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         drivetrain = Drivetrain.getInstance();
-        drivetrain.setInitialPose(new Pose2d(8, 4, Rotation2d.fromDegrees(90)));
+        drivetrain.setInitialPose(new Pose2d(8, 4, Rotation2d.fromDegrees(0)));
         xbox.setDeadzone(0.2);
         xbox.setTriggerThreshold(0.2);
 

@@ -76,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
         // Put all the swerve modules in an array to make using them easier
         swerveModules = new SwerveModule[] {FL_Module, FR_Module, BL_Module, BR_Module};
 
-        angleController.enableContinuousInput(-180, 180);
+        angleController.enableContinuousInput(-Math.PI, Math.PI);
         angleController.setTolerance(SnapConstants.EPSILON);
         xController.setTolerance(PoseConstants.EPSILON);
         yController.setTolerance(PoseConstants.EPSILON);
@@ -151,7 +151,7 @@ public class Drivetrain extends SubsystemBase {
     public void setSnapGoal(double goal) {angleController.setGoal(goal);}
     /** Calculate the rotational speed from the pid controller, unless it's already at the goal */
     public double calculateSnapSpeed() {
-        return angleController.atGoal() ? 0 : angleController.calculate(getYaw());
+        return angleController.atGoal() ? 0 : angleController.calculate(Math.toRadians(getYaw()));
     }
     /** @return true if the snap controller is at it's goal */
     public boolean atSnapGoal() {return angleController.atGoal();}

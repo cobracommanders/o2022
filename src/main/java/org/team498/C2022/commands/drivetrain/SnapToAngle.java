@@ -24,6 +24,7 @@ public class SnapToAngle extends CommandBase {
     public void execute() {
         // Calculate the rotational speed from the pid controller, unless it's already at the goal
         double rotationalSpeed = drivetrain.calculateSnapSpeed();
+		rotationalSpeed = Math.toDegrees(rotationalSpeed);
 
         // Set the drivetrain to drive, remaining in the set position but snapping to the target
         drivetrain.drive(new ChassisSpeeds(0, 0, rotationalSpeed));

@@ -3,7 +3,6 @@ package org.team498.C2022;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class Constants {
-
     public static final class OIConstants {
         public static final int DRIVER_CONTROLLER_ID = 0;
     }
@@ -27,7 +26,7 @@ public final class Constants {
     }
 
     public static final class SnapConstants {
-        public static final double P = 5.0;
+        public static final double P = 5;
         public static final double I = 0;
         public static final double D = 0;
         public static final double EPSILON = 1.0;
