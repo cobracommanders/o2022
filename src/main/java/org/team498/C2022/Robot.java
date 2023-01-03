@@ -13,6 +13,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		robotContainer.getRobotInitCommand().schedule();
+		Drivetrain.getInstance().setGyroOffset(0);
 	}
 
 	@Override

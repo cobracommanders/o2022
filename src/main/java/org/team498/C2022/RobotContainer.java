@@ -3,10 +3,9 @@ package org.team498.C2022;
 import org.team498.C2022.commands.CalibrateGyro;
 import org.team498.C2022.commands.auto.Auto_1;
 import org.team498.C2022.commands.drivetrain.TeleDrive;
-import org.team498.C2022.commands.drivetrain.archive.SnapDrive;
-import org.team498.C2022.commands.wrist.SetWrist;
+import org.team498.C2022.commands.drivetrain.archive.FieldOrientedDrive;
+import org.team498.C2022.commands.drivetrain.archive.OffenseDrive;
 import org.team498.C2022.subsystems.Drivetrain;
-import org.team498.C2022.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -28,13 +27,15 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		configureDriverBindings();
-		drivetrain.setDefaultCommand(new SnapDrive(drivetrain, driverControls.getX(), driverControls.getY(), driverControls.getRotationO(), 0.1, driverControls.getSlowDrive()));
+		drivetrain.setDefaultCommand(new OffenseDrive());
 	}
 
 	private void configureDriverBindings() {
 		//driverControls.aButton.whenPressed(new SetWrist(Wrist.State.OUT));
 		//driverControls.bButton.whenPressed(new SetWrist(Wrist.State.IN));
 		driverControls.aButton.whenPressed(new InstantCommand(() -> drivetrain.IMU.reset()));
+
+		driverControls.getControlSet().toggleWhenActive(new FieldOrientedDrive());
 	}
 
 	public Command getAutoCommand() {

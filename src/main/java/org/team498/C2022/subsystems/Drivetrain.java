@@ -52,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
 		return mInstance;
 	}
 
+	public static double offset = 0;
+
 	public ProfiledPIDController snapController = new ProfiledPIDController(
 		Constants.SnapConstants.kP,
 		Constants.SnapConstants.kI, 
@@ -78,8 +80,7 @@ public class Drivetrain extends SubsystemBase {
 
 	private static SwerveDriveKinematics kinematics;
 
-	public double lastAngle = -90;
-	public double offset = 0;
+	public double lastAngle;
 
 	// Distance of the swerve modules from the center of the robot converted to
 	// meters
@@ -151,7 +152,7 @@ public class Drivetrain extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		odometry.update(Rotation2d.fromDegrees(-getYaw() + offset), getModuleStates());
+		odometry.update(Rotation2d.fromDegrees(-getYaw()), getModuleStates());
 		field.setRobotPose(getPose());
 		if (encoderResetTimer++ > 500 && !isMoving() && idleResetTimer++ > 50) {
 			matchEncoders();
@@ -166,10 +167,10 @@ public class Drivetrain extends SubsystemBase {
 		SmartDashboard.putData(field);
 		SmartDashboard.putNumber("gyro", getYaw180());
 		SmartDashboard.putData(this);
+		SmartDashboard.putNumber("qurrent", swerveModules[0].current);
 	}
 	public void setGyroOffset(double offset) {
-		IMU.reset();
-		this.offset = offset;
+		Drivetrain.offset = offset;
 	}
 
 	public synchronized void zeroGyro() {
@@ -272,7 +273,7 @@ public class Drivetrain extends SubsystemBase {
 			angleAdjustment = 0;
 		}
 		SmartDashboard.putNumber("Angle adjustment", angleAdjustment);
-		drive(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, angleAdjustment, Rotation2d.fromDegrees(getYaw180() + offset)));
+		drive(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, angleAdjustment, Rotation2d.fromDegrees(getYaw180())));
 		//drive(translation2d, angleAdjustment, fieldRelative, false);
     }
 	public boolean atPosition() {
@@ -290,7 +291,7 @@ public class Drivetrain extends SubsystemBase {
 
 	}
 	public synchronized void drive(double dx, double dy, double dr) {
-		drive(new ChassisSpeeds(dx, dy, dr), new Translation2d(0, 0));
+		drive(ChassisSpeeds.fromFieldRelativeSpeeds(dx, dy, dr, Rotation2d.fromDegrees(getYaw180())));
 	}
 	public synchronized void drive(ChassisSpeeds chassisSpeeds) {
 		drive(chassisSpeeds, new Translation2d(0, 0));
@@ -307,7 +308,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @return The current yaw angle in degrees (-180 to 180)
 	 */
 	public synchronized double getYaw180() {
-		return limit180(-IMU.getAngle() + 90);
+		return limit180(-IMU.getAngle() + offset);
 	}
 	
 	public double limit180(double value) {

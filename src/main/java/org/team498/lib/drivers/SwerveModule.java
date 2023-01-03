@@ -8,6 +8,7 @@ import static org.team498.C2022.Constants.DrivetrainConstants.kMaxVelocityMeters
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -18,6 +19,7 @@ import org.team498.lib.util.Unit;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
@@ -29,8 +31,8 @@ public class SwerveModule extends SubsystemBase {
 	private final CANCoder encoder;
 
 	private final double angleOffset;
-	//private TalonFXConfiguration driveMotorConfig = new TalonFXConfiguration();
-	//private TalonFXConfiguration steerMotorConfig = new TalonFXConfiguration();
+	private TalonFXConfiguration driveMotorConfig = new TalonFXConfiguration();
+	private TalonFXConfiguration steerMotorConfig = new TalonFXConfiguration();
 
 	private double lastAngle;
 
@@ -42,14 +44,13 @@ public class SwerveModule extends SubsystemBase {
 		driveMotor.configFactoryDefault();
 		steerMotor.configFactoryDefault();
 
-		// driveMotorConfig.supplyCurrLimit.currentLimit = 35;
-		// driveMotorConfig.supplyCurrLimit.enable = true;
+		driveMotorConfig.supplyCurrLimit.currentLimit = 35;
+		driveMotorConfig.supplyCurrLimit.enable = true;
+		steerMotorConfig.supplyCurrLimit.currentLimit = 20;
+		steerMotorConfig.supplyCurrLimit.enable = true;
 
-		// steerMotorConfig.supplyCurrLimit.currentLimit = 20;
-		// steerMotorConfig.supplyCurrLimit.enable = true;
-		
-		// driveMotor.configAllSettings(driveMotorConfig);
-		// steerMotor.configAllSettings(steerMotorConfig);
+		driveMotor.configAllSettings(driveMotorConfig);
+		steerMotor.configAllSettings(steerMotorConfig);
 
 		driveMotor.setNeutralMode(NeutralMode.Brake);
 		driveMotor.configOpenloopRamp(1);
@@ -87,8 +88,10 @@ public class SwerveModule extends SubsystemBase {
 
 		// Drive current limit: 35
 		// Steer current limit: 20
-		// driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 35, 40, .5));
-		// steerMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 40, .5));
+		// driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,
+		// 35, 40, .5));
+		// steerMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,
+		// 20, 40, .5));
 
 		this.angleOffset = angleOffset;
 		this.lastAngle = getState().angle.getDegrees();
@@ -120,7 +123,7 @@ public class SwerveModule extends SubsystemBase {
 		this.currentSpeed = newState.speedMetersPerSecond;
 		this.currentAngle = newState.angle.getDegrees();
 	}
-
+	public double current;
 	@Override
 	public void periodic() {
 		double velocity = Falcon500Conversions.MPSToFalcon(
@@ -129,12 +132,16 @@ public class SwerveModule extends SubsystemBase {
 				kMK4IDriveReductionL2);
 		driveMotor.set(ControlMode.Velocity, velocity);
 
-		double angle = (Math.abs(velocity) <= kMaxVelocityMetersPerSecond * 0.01) && !forcedAngle ? lastAngle : currentAngle;
+		double angle = (Math.abs(velocity) <= kMaxVelocityMetersPerSecond * 0.01) && !forcedAngle ? lastAngle
+				: currentAngle;
 		steerMotor.set(ControlMode.Position, Falcon500Conversions
 				.degreesToFalcon(angle - angleOffset, kMK4ISteerReductionL2));
 
 		lastAngle = getState().angle.getDegrees();
 
+
+		SmartDashboard.putNumber("qurennt", driveMotor.getSupplyCurrent());
+	    current = driveMotor.getSupplyCurrent();
 	}
 
 	// Get the velocity of the wheel in meters per second
@@ -142,7 +149,8 @@ public class SwerveModule extends SubsystemBase {
 		// Convert the value returned by the sensor (rotations per 100ms) to rotations
 		// per second
 		return Falcon500Conversions
-				.falconToMPS(driveMotor.getSelectedSensorVelocity(), Unit.inchesToMeters(kDriveWheelCircumference), kMK4IDriveReductionL2);
+				.falconToMPS(driveMotor.getSelectedSensorVelocity(), Unit.inchesToMeters(kDriveWheelCircumference),
+						kMK4IDriveReductionL2);
 	}
 
 	// Get the current state of the swerve module

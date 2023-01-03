@@ -1,9 +1,5 @@
 package org.team498.C2022.subsystems;
 
-import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import org.team498.C2022.Constants.IntakeContants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

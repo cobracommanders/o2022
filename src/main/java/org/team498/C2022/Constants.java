@@ -49,9 +49,10 @@ public final class Constants {
 	public static final class DrivetrainConstants {
 		// This is just copied from SDS, we need to find the real one still
 
-		public static final double kMaxVelocityMetersPerSecond = 1.5 * 6380.0 / 60.0 *
+		public static final double kMaxVelocityMetersPerSecond = 6380.0 / 60.0 *
 				((14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0)) * Units.inchesToMeters(4) *
 				Math.PI;
+		public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;
 
 		// public static final double kMaxVelocityMetersPerSecond = 2;
 
@@ -83,34 +84,37 @@ public final class Constants {
 		public static final double kBackLeftModuleOffset = 74.5;
 		public static final double kBackRightModuleOffset = 28.0;
 	}
+
 	public static final class SnapConstants {
-        public static final double kP = 5.0;
-        public static final double kI = 0;
-        public static final double kD = 0.0;
-        public static final double kTimeout = 0.25;
-        public static final double kEpsilon = 1.0;
+		public static final double kP = 5.0;
+		public static final double kI = 0;
+		public static final double kD = 0.0;
+		public static final double kTimeout = 0.25;
+		public static final double kEpsilon = 1.0;
 
-        // Constraints for the profiled angle controller
-        public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.pow(kMaxAngularSpeedRadiansPerSecond, 2);
+		// Constraints for the profiled angle controller
+		public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;
+		public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.pow(kMaxAngularSpeedRadiansPerSecond,
+				2);
 
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-                new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-    }
+		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+				kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+	}
+
 	public static final class PoseConstants {
-        public static final double kP = 2.5;
-        public static final double kI = 0;
-        public static final double kD = 0.0;
-        public static final double kTimeout = 0.25;
-        public static final double kEpsilon = .1;
+		public static final double kP = 2.5;
+		public static final double kI = 0;
+		public static final double kD = 0.0;
+		public static final double kTimeout = 0.25;
+		public static final double kEpsilon = .1;
 
-        // Constraints for the profiled angle controller
-        public static final double kMaxSpeedPerSecond = 2;
-        public static final double kMaxSpeedPerSecondSquared = Math.pow(kMaxSpeedPerSecond, 2);
+		// Constraints for the profiled angle controller
+		public static final double kMaxSpeedPerSecond = 2;
+		public static final double kMaxSpeedPerSecondSquared = Math.pow(kMaxSpeedPerSecond, 2);
 
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-                new TrapezoidProfile.Constraints(kMaxSpeedPerSecond, kMaxSpeedPerSecondSquared);
-    }
+		public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+				kMaxSpeedPerSecond, kMaxSpeedPerSecondSquared);
+	}
 
 	public static final String kRoborioTrajectoryFilepath = "/home/lvuser/paths";
 }

@@ -13,9 +13,8 @@ public class Auto1 extends SequentialCommandGroup {
     public Auto1(Drivetrain drivetrain) {
         addRequirements(drivetrain);
         addCommands(
-            new InstantCommand(()-> drivetrain.offset = -startPose.getRotation().getDegrees()),
+            new InstantCommand(()-> Drivetrain.offset = -startPose.getRotation().getDegrees()),
             new InstantCommand(()-> drivetrain.lastAngle = startPose.getRotation().getDegrees()),
-            new InstantCommand(()-> drivetrain.setGyroOffset(0), drivetrain),
             new InstantCommand(()-> drivetrain.resetOdometry(startPose), drivetrain)
             //new SetPosition(drivetrain, 8, 4, -135)
            // new SetPosition(drivetrain, 6, 2, 45),
