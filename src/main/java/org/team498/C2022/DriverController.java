@@ -47,8 +47,8 @@ public class DriverController extends ControllerPackage {
     }
 
     private void updateDriverSet() {
-        x = () -> -squareInput(-super.leftY);
-        y = () -> -squareInput(-super.leftX);
+        x = () -> -squareInput(super.leftY);
+        y = () -> -squareInput(super.leftX);
         rotationO = () -> updateRotationSetpoint(controller, drivetrain);
         rotationD = () -> squareInput(super.rightX);
         resetPose = super.aButton;
@@ -120,7 +120,7 @@ public class DriverController extends ControllerPackage {
         if (isPOVActive()) {
             return getPOVAngle(drivetrain);
         } else {
-            return getControllerAngle(drivetrain);
+            return getControllerAngle(drivetrain) + 90;
         }
     }
 
@@ -159,6 +159,10 @@ public class DriverController extends ControllerPackage {
         drivetrain.lastAngle = result;
         return result - 90;
     }
+
+	public double getMagnitude() {
+		return Math.hypot(controller.getRightX(), controller.getRightY());
+	}
 
     private boolean isPOVActive() {
         return super.pov != -1;

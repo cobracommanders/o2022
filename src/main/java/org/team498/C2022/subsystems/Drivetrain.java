@@ -78,9 +78,8 @@ public class Drivetrain extends SubsystemBase {
 
 	private static SwerveDriveKinematics kinematics;
 
-	public double lastAngle;
-	public double offset = -1.5;
-
+	public double lastAngle = -90;
+	public double offset = 0;
 
 	// Distance of the swerve modules from the center of the robot converted to
 	// meters
@@ -103,6 +102,7 @@ public class Drivetrain extends SubsystemBase {
 	private final Field2d field = new Field2d();
 
 	private Drivetrain() {
+
 		snapController.enableContinuousInput(-Math.PI, Math.PI);
 		frontLeft = new SwerveModule(
 				// Drive motor ID
@@ -307,7 +307,7 @@ public class Drivetrain extends SubsystemBase {
 	 * @return The current yaw angle in degrees (-180 to 180)
 	 */
 	public synchronized double getYaw180() {
-		return limit180(-IMU.getAngle());
+		return limit180(-IMU.getAngle() + 90);
 	}
 	
 	public double limit180(double value) {

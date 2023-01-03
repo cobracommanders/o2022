@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import org.team498.C2022.DriverController;
 import org.team498.C2022.subsystems.Drivetrain;
 
 // Controls the robot in fiels oriented mode
@@ -40,18 +41,23 @@ public class SnapDrive extends CommandBase {
 		SmartDashboard.putBoolean("Robot Oriented", false);
 	}
 
+	public boolean hasSnappedBefore = false;
 	@Override
 	public void execute() {
 		double xTranslation = translationXSupplier.getAsDouble();
 		double yTranslation = translationYSupplier.getAsDouble();
 		double rotation = rotationSupplier.getAsDouble();
 		
-		drivetrainSubsystem.angleAlignDrive(
-			
-			deadzone(xTranslation, deadzone), 
-			deadzone(yTranslation, deadzone), 
-			rotation
-		);
+		if (DriverController.getInstance().getMagnitude() > 0.4 || hasSnappedBefore) {
+			hasSnappedBefore = true;
+			drivetrainSubsystem.angleAlignDrive(
+				deadzone(xTranslation, deadzone), 
+				deadzone(yTranslation, deadzone), 
+				rotation
+			);
+		}
+
+
 		// drivetrainSubsystem.drive(
 		// 		ChassisSpeeds.fromFieldRelativeSpeeds(
 		// 				deadzone(((xTranslation * driveSpeed) * (xTranslation * driveSpeed)) * xTranslation, deadzone),
