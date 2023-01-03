@@ -79,7 +79,7 @@ public class Drivetrain extends SubsystemBase {
 	private static SwerveDriveKinematics kinematics;
 
 	public double lastAngle;
-	public double offset = 90;
+	public double offset = -1.5;
 
 
 	// Distance of the swerve modules from the center of the robot converted to
