@@ -3,6 +3,7 @@ package org.team498.C2022;
 import org.team498.C2022.commands.CalibrateGyro;
 import org.team498.C2022.commands.auto.Auto_1;
 import org.team498.C2022.commands.drivetrain.TeleDrive;
+import org.team498.C2022.commands.drivetrain.archive.SnapDrive;
 import org.team498.C2022.commands.wrist.SetWrist;
 import org.team498.C2022.subsystems.Drivetrain;
 import org.team498.C2022.subsystems.Wrist;
@@ -27,7 +28,7 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		configureDriverBindings();
-		drivetrain.setDefaultCommand(new TeleDrive());
+		drivetrain.setDefaultCommand(new SnapDrive(drivetrain, driverControls.getX(), driverControls.getY(), driverControls.getRotationO(), 0.1, driverControls.getSlowDrive()));
 	}
 
 	private void configureDriverBindings() {
