@@ -227,6 +227,10 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getAngle();
     }
 
+    public void resetSnapController() {
+        angleController.reset(Math.toRadians(getYaw()));
+    }
+
 
     private static Drivetrain instance;
 

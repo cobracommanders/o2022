@@ -18,6 +18,7 @@ public class SnapToAngle extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.setSnapGoal(angle);
+        drivetrain.resetSnapController();
     }
 
     @Override
