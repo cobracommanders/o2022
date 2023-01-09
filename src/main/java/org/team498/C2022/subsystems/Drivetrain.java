@@ -13,8 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team498.lib.drivers.Gyro;
@@ -76,10 +76,10 @@ public class Drivetrain extends SubsystemBase {
         // Put all the swerve modules in an array to make using them easier
         swerveModules = new SwerveModule[] {FL_Module, FR_Module, BL_Module, BR_Module};
 
-        angleController.enableContinuousInput(-Math.PI, Math.PI);
-        angleController.setTolerance(SnapConstants.EPSILON);
+        angleController.enableContinuousInput(-180, 180);
+        /*angleController.setTolerance(SnapConstants.EPSILON);
         xController.setTolerance(PoseConstants.EPSILON);
-        yController.setTolerance(PoseConstants.EPSILON);
+        yController.setTolerance(PoseConstants.EPSILON);*///TODO
 
         // Set up the kinematics
         double moduleDistance = Units.inchesToMeters(SWERVE_MODULE_DISTANCE_FROM_CENTER);
@@ -88,14 +88,14 @@ public class Drivetrain extends SubsystemBase {
         Translation2d BL_ModulePosition = new Translation2d(-moduleDistance, moduleDistance);
         Translation2d BR_ModulePosition = new Translation2d(-moduleDistance, -moduleDistance);
         kinematics = new SwerveDriveKinematics(FL_ModulePosition, FR_ModulePosition, BL_ModulePosition, BR_ModulePosition);
-        odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(gyro.getRawAngle()));
+        odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0));
     }
 
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(-getYaw()), getModuleStates());
 
-        if (RobotState.isDisabled()) {matchEncoders();}
+        //if (RobotState.isDisabled()) {matchEncoders();} //TODO
 
         SmartDashboard.putData(this);
         SmartDashboard.putNumber("Gyro", getYaw());
@@ -149,9 +149,10 @@ public class Drivetrain extends SubsystemBase {
      * @param goal the goal to set in degrees
      */
     public void setSnapGoal(double goal) {angleController.setGoal(goal);}
+
     /** Calculate the rotational speed from the pid controller, unless it's already at the goal */
     public double calculateSnapSpeed() {
-        return angleController.atGoal() ? 0 : angleController.calculate(Math.toRadians(getYaw()));
+        return angleController.atGoal() ? 0 : angleController.calculate(getYaw());
     }
     /** @return true if the snap controller is at it's goal */
     public boolean atSnapGoal() {return angleController.atGoal();}
@@ -227,10 +228,10 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getAngle();
     }
 
-    public void resetSnapController() {
-        angleController.reset(Math.toRadians(getYaw()));
+    public void resetAngleController() {
+        angleController.reset(getYaw());
     }
-
+    
 
     private static Drivetrain instance;
 

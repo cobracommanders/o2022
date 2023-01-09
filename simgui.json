@@ -11,6 +11,18 @@
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Drivetrain": "Subsystem"
+    },
+    "windows": {
+      "/SmartDashboard/Drivetrain": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
     }
   }
 }

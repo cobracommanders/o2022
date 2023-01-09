@@ -33,7 +33,7 @@ public final class Constants {
 
 
         // Constraints for the profiled angle controller
-        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 2.0 * Math.PI;
+        public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.toDegrees(2.0 * Math.PI);
         public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.pow(MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, 2);
 
         public static final TrapezoidProfile.Constraints CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(

@@ -10,6 +10,8 @@ import org.team498.C2022.subsystems.Drivetrain;
 import org.team498.lib.drivers.Xbox;
 import org.team498.lib.util.Trajectories;
 
+import java.util.function.DoubleSupplier;
+
 import static org.team498.C2022.Constants.OIConstants;
 
 public class RobotContainer {
@@ -31,5 +33,9 @@ public class RobotContainer {
         xbox.A().whenActive(new InstantCommand(drivetrain::zeroGyro));
         xbox.X().toggleWhenActive(new FieldOrientedDrive(xbox::leftX, xbox::leftY, xbox::rightX));
         xbox.start().whenActive(new TrajectoryFollower(Trajectories.getTrajectory("test")));
+    }
+
+    public DoubleSupplier test() {
+        return xbox::POVAngle;
     }
 }

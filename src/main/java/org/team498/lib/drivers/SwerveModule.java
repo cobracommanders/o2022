@@ -3,6 +3,7 @@ package org.team498.lib.drivers;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -138,12 +139,12 @@ public class SwerveModule extends SubsystemBase {
 
     private void configDriveMotor(TalonFX motor) {
         motor.configFactoryDefault();
-        // TalonFXConfiguration currentLimitConfig = new TalonFXConfiguration();
+        TalonFXConfiguration currentLimitConfig = new TalonFXConfiguration();
 
-        // currentLimitConfig.supplyCurrLimit.currentLimit = 35;
-        // currentLimitConfig.supplyCurrLimit.enable = true;
+        currentLimitConfig.supplyCurrLimit.currentLimit = 35;
+        currentLimitConfig.supplyCurrLimit.enable = true;
 
-        // motor.configAllSettings(currentLimitConfig);
+        motor.configAllSettings(currentLimitConfig);
 
         motor.setNeutralMode(NeutralMode.Brake);
         motor.configOpenloopRamp(1);
@@ -158,12 +159,12 @@ public class SwerveModule extends SubsystemBase {
 
     private void configSteerMotor(TalonFX motor) {
         motor.configFactoryDefault();
-        // TalonFXConfiguration currentLimitConfig = new TalonFXConfiguration();
+        TalonFXConfiguration currentLimitConfig = new TalonFXConfiguration();
 
-        // currentLimitConfig.supplyCurrLimit.currentLimit = 20;
-        // currentLimitConfig.supplyCurrLimit.enable = true;
+        currentLimitConfig.supplyCurrLimit.currentLimit = 20;
+        currentLimitConfig.supplyCurrLimit.enable = true;
 
-        // motor.configAllSettings(currentLimitConfig);
+        motor.configAllSettings(currentLimitConfig);
 
         motor.setNeutralMode(NeutralMode.Brake);
         motor.configOpenloopRamp(1);

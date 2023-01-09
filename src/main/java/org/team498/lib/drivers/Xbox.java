@@ -4,10 +4,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.team498.lib.util.RotationUtil;
 
+import java.util.EnumMap;
+
 public class Xbox {
     private final int port;
     private double deadzone = 0;
     private double triggerThreshold = 0.1;
+    private final EnumMap<Button, Trigger> buttonTriggers = new EnumMap<>(Button.class);
+    // TODO use computeIfAbsent for POV triggers and active triggers
 
 
     /**
@@ -32,7 +36,10 @@ public class Xbox {
         X(3),
         Y(4),
         Back(7),
-        Start(8);
+        Start(8),
+        LeftTrigger(9),
+        RightTrigger(10);
+
 
         public final int value;
 
@@ -56,6 +63,11 @@ public class Xbox {
         }
     }
 
+    public Trigger POVActive() {return new Trigger(() -> getRawPOV() == -1);}
+    public Trigger RightStickActive() {return new Trigger(() -> Math.hypot(getAxis(Axis.RightY), getAxis(Axis.RightX)) != 0);}
+    public Trigger LeftStickActive() {return new Trigger(() -> Math.hypot(getAxis(Axis.LeftY), getAxis(Axis.LeftX)) != 0);}
+
+
     /* * * * * * * * * * * * * * * * * * * * * * * */
     /* * * * * * * * * * BUTTONS * * * * * * * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * */
@@ -67,42 +79,50 @@ public class Xbox {
      * @return the value of the button
      */
     public boolean getButton(Button button) {return DriverStation.getStickButton(port, (byte) button.value);}
+    public Trigger getButtonTrigger(Button button) {return new Trigger(() -> getButton(button));}
+
 
     /** @return a trigger object using the controller's left bumper */
-    public Trigger leftBumper() {return new Trigger(() -> getButton(Button.LeftBumper));}
+    public Trigger leftBumper() {return buttonTriggers.computeIfAbsent(Button.LeftBumper, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's right bumper */
-    public Trigger rightBumper() {return new Trigger(() -> getButton(Button.RightBumper));}
+    public Trigger rightBumper() {return buttonTriggers.computeIfAbsent(Button.RightBumper, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's left joystick button */
-    public Trigger leftStick() {return new Trigger(() -> getButton(Button.LeftStick));}
+    public Trigger leftStick() {return buttonTriggers.computeIfAbsent(Button.LeftStick, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's right joystick button */
-    public Trigger rightStick() {return new Trigger(() -> getButton(Button.RightStick));}
+    public Trigger rightStick() {return buttonTriggers.computeIfAbsent(Button.RightStick, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's A button */
-    public Trigger A() {return new Trigger(() -> getButton(Button.A));}
+    public Trigger A() {return buttonTriggers.computeIfAbsent(Button.A, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's B button */
-    public Trigger B() {return new Trigger(() -> getButton(Button.B));}
+    public Trigger B() {return buttonTriggers.computeIfAbsent(Button.B, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's X button */
-    public Trigger X() {return new Trigger(() -> getButton(Button.X));}
+    public Trigger X() {return buttonTriggers.computeIfAbsent(Button.X, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's Y button */
-    public Trigger Y() {return new Trigger(() -> getButton(Button.Y));}
+    public Trigger Y() {return buttonTriggers.computeIfAbsent(Button.Y, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's back button */
-    public Trigger back() {return new Trigger(() -> getButton(Button.Back));}
+    public Trigger back() {return buttonTriggers.computeIfAbsent(Button.Back, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's start button */
-    public Trigger start() {return new Trigger(() -> getButton(Button.Start));}
+    public Trigger start() {return buttonTriggers.computeIfAbsent(Button.Start, this::getButtonTrigger);}
 
     /** @return a trigger object using the controller's right trigger */
-    public Trigger rightTrigger() {return new Trigger(() -> getRawAxis(Axis.RightTrigger) > triggerThreshold);}
+    public Trigger rightTrigger() {
+        return buttonTriggers.computeIfAbsent(Button.RightTrigger,
+                                              k -> new Trigger(() -> getRawAxis(Axis.RightTrigger) > triggerThreshold));
+    }
 
     /** @return a trigger object using the controller's left trigger */
-    public Trigger leftTrigger() {return new Trigger(() -> getRawAxis(Axis.LeftTrigger) > triggerThreshold);}
+    public Trigger leftTrigger() {
+        return buttonTriggers.computeIfAbsent(Button.LeftTrigger,
+                                              k -> new Trigger(() -> getRawAxis(Axis.LeftTrigger) > triggerThreshold));
+    }
 
 
     /* * * * * * * * * * * * * * * * * * * * * * */
@@ -136,8 +156,8 @@ public class Xbox {
     //TODO make left 90 instead 0f 270
     private double lastAngleRight = 0;
     /**
-     * Gets the angle of the right joystick, from 0 to 360. Upwards is 0 degrees, right is 90, etc.
-     * This value uses the last read angle when the joystick is returned to the center.
+     * Gets the angle of the right joystick, from -180 to 180. Upwards is 0 degrees, right is 90, etc. This value uses the last
+     * read angle when the joystick is returned to the center.
      *
      * @return the angle of the right joystick
      */
@@ -161,8 +181,8 @@ public class Xbox {
 
     private double lastAngleLeft = 0;
     /**
-     * Gets the angle of the left joystick, from 0 to 360. Upwards is 0 degrees, right is 90, etc.
-     * This value uses the last read angle when the joystick is returned to the center.
+     * Gets the angle of the left joystick, from -180 to 180. Upwards is 0 degrees, right is 90, etc. This value uses the last
+     * read angle when the joystick is returned to the center.
      *
      * @return the angle of the left joystick
      */
@@ -208,10 +228,10 @@ public class Xbox {
         return DriverStation.getStickPOV(port, 0);
     }
 
-    private double lastAnglePOV = 0;
+    private double lastAnglePOV = -0.0;
     /**
-     * Gets the angle of the POV, from 0 to 360. Upwards is 0 degrees, right is 90, etc.
-     * This value uses the last read angle when the POV is returned to the center.
+     * Gets the angle of the POV, from -180 to 180. Upwards is 0 degrees, right is 90, etc. This value uses the last read angle
+     * when the POV is returned to the center.
      *
      * @return the angle of the POV
      */
@@ -224,5 +244,14 @@ public class Xbox {
         lastAnglePOV = angle;
         return angle;
     }
+
+    public Trigger POV0() {return new Trigger(() -> POVAngle() == -0);}
+    public Trigger POV45() {return new Trigger(() -> POVAngle() == 45);}
+    public Trigger POV90() {return new Trigger(() -> POVAngle() == 90);}
+    public Trigger POV135() {return new Trigger(() -> POVAngle() == 135);}
+    public Trigger POV180() {return new Trigger(() -> POVAngle() == -180);}
+    public Trigger POVMinus135() {return new Trigger(() -> POVAngle() == -135);}
+    public Trigger POVMinus90() {return new Trigger(() -> POVAngle() == -90);}
+    public Trigger POVMinus45() {return new Trigger(() -> POVAngle() == -45);}
 }
 
